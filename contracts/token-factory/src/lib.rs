@@ -247,6 +247,13 @@ impl TokenFactory {
             return Err(Error::InvalidBurnAmount);
         }
 
+        let token = TokenClient::new(&env, &token_address);
+        let balance = token.balance(&from);
+        if amount > balance {
+            return Err(Error::BurnAmountExceedsBalance);
+        }
+
+        token.burn(&from, &amount);
         // Check burn_enabled via reverse index lookup
         let idx_key = (&token_address, symbol_short!("idx"));
         if let Some(index) = env.storage().instance().get::<_, u32>(&idx_key) {
