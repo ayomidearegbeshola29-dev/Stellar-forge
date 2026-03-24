@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { stellarService } from '../services/stellar'
+import { useStellarContext } from '../context/StellarContext'
 
 export const TokenDetail: React.FC = () => {
+  const { stellarService } = useStellarContext()
   const { address } = useParams<{ address: string }>()
   const [token, setToken] = useState<Record<string, unknown> | null>(null)
   const [error, setError] = useState<string | null>(null)

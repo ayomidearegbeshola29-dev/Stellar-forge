@@ -4,11 +4,12 @@ import { Button } from './UI/Button'
 import { MainnetConfirmationModal } from './UI/MainnetConfirmationModal'
 import { useMainnetConfirmation } from '../hooks/useMainnetConfirmation'
 import { useToast } from '../context/ToastContext'
-import { stellarService } from '../services/stellar'
+import { useStellarContext } from '../context/StellarContext'
 import { TokenDeployParams } from '../types'
 import { validateTokenSymbol, validateTokenName, validateDecimals } from '../utils/validation'
 
 export const TokenCreateForm: React.FC = () => {
+  const { stellarService } = useStellarContext()
   const [name, setName] = useState('')
   const [symbol, setSymbol] = useState('')
   const [decimals, setDecimals] = useState('7')

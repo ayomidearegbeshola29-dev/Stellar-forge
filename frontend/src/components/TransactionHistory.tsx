@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { stellarService } from '../services/stellar'
+import { useStellarContext } from '../context/StellarContext'
 import { Button } from './UI/Button'
 import { Spinner } from './UI/Spinner'
 import { STELLAR_CONFIG } from '../config/stellar'
@@ -98,6 +98,7 @@ export const TransactionHistory: React.FC<Props> = ({
   tokenAddress,
   pageSize = 20,
 }) => {
+  const { stellarService } = useStellarContext()
   const [events, setEvents] = useState<ContractEvent[]>([])
   const [cursor, setCursor] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)

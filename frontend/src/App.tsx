@@ -42,6 +42,7 @@ function App() {
 import { WalletProvider } from './context/WalletContext'
 import { ToastProvider, useToast } from './context/ToastContext'
 import { NetworkProvider } from './context/NetworkContext'
+import { StellarProvider } from './context/StellarContext'
 import { ToastContainer } from './components/UI/ToastContainer'
 import { NetworkSwitcher } from './components/NetworkSwitcher'
 import { useWallet } from './hooks/useWallet'
@@ -186,11 +187,13 @@ function AppContent() {
 function App() {
   return (
     <NetworkProvider>
-      <WalletProvider>
-        <ToastProvider>
-          <AppContent />
-        </ToastProvider>
-      </WalletProvider>
+      <StellarProvider>
+        <WalletProvider>
+          <ToastProvider>
+            <AppContent />
+          </ToastProvider>
+        </WalletProvider>
+      </StellarProvider>
     </NetworkProvider>
   )
 }
