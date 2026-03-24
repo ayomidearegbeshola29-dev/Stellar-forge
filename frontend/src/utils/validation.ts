@@ -5,7 +5,7 @@ export const isValidStellarAddress = (address: string): boolean => {
   return address.length === 56 && address.startsWith('G')
 }
 
-export const validateTokenParams = (params: any) => {
+export const validateTokenParams = (params: { name: string; symbol: string; decimals: number; initialSupply: string }) => {
   const errors: Record<string, string> = {}
 
   if (!params.name || params.name.length < 1 || params.name.length > 32) {

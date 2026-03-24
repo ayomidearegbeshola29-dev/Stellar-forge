@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import { Input } from './UI/Input'
 import { useDebounce } from '../hooks/useDebounce'
 import { stellarService } from '../services/stellar'
+import type { TokenInfo } from '../types'
 
 export const MintForm: React.FC = () => {
   const [tokenAddress, setTokenAddress] = useState('')
   const [amount, setAmount] = useState('')
-  const [tokenInfo, setTokenInfo] = useState<any>(null)
+  const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null)
 
   const debouncedAddress = useDebounce(tokenAddress, 300)
 

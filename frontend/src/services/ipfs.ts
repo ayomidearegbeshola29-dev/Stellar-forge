@@ -7,8 +7,7 @@ export class IPFSService {
     return 'ipfs://mock-uri'
   }
 
-  async getMetadata(uri: string): Promise<any> {
-    // Implementation for getting metadata from IPFS
+  async getMetadata(uri: string): Promise<Record<string, unknown>> {
     console.log('Getting metadata from:', uri)
     return {}
   }

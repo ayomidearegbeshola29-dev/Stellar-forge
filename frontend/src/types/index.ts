@@ -23,6 +23,7 @@ export interface TokenInfo {
   decimals: number
   totalSupply: string
   creator: string
+  createdAt?: number
 }
 
 export interface AppError {
