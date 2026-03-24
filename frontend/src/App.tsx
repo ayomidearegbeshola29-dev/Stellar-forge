@@ -1,3 +1,4 @@
+import { ToastContainer,Button,Spinner } from './components/UI';
 import './App.css'
 import { useDarkMode } from './hooks/useDarkMode'
 
@@ -42,11 +43,8 @@ function App() {
 import { WalletProvider } from './context/WalletContext'
 import { ToastProvider, useToast } from './context/ToastContext'
 import { NetworkProvider } from './context/NetworkContext'
-import { ToastContainer } from './components/UI/ToastContainer'
 import { NetworkSwitcher } from './components/NetworkSwitcher'
 import { useWallet } from './hooks/useWallet'
-import { Button } from './components/UI/Button'
-import { Spinner } from './components/UI/Spinner'
 import { truncateAddress, formatXLM } from './utils/formatting'
 import { NavBar } from './components/NavBar'
 import { Home } from './components/Home'
@@ -186,11 +184,13 @@ function AppContent() {
 function App() {
   return (
     <NetworkProvider>
-      <WalletProvider>
-        <ToastProvider>
-          <AppContent />
-        </ToastProvider>
-      </WalletProvider>
+      <StellarProvider>
+        <WalletProvider>
+          <ToastProvider>
+            <AppContent />
+          </ToastProvider>
+        </WalletProvider>
+      </StellarProvider>
     </NetworkProvider>
   )
 }

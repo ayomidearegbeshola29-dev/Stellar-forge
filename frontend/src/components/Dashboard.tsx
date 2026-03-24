@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Input } from './UI/Input'
+import { Input } from './UI';
+import { useState, useEffect } from 'react'
 import { TransactionHistory } from './TransactionHistory'
 import { useDebounce } from '../hooks/useDebounce'
-import { useWallet } from '../hooks/useWallet'
-import { stellarService } from '../services/stellar'
+import { useStellarContext } from '../context/StellarContext'
 import { STELLAR_CONFIG } from '../config/stellar'
 import type { TokenInfo } from '../types'
 
 export const TokenDashboard: React.FC = () => {
+  const { stellarService } = useStellarContext()
   const { wallet } = useWallet()
   const [tokens, setTokens] = useState<TokenInfo[]>([])
   const [isLoading, setIsLoading] = useState(true)
