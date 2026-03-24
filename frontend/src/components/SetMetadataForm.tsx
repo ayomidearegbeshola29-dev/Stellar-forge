@@ -1,6 +1,5 @@
+import { Input,Button } from './UI';
 import { useState } from 'react'
-import { Input } from './UI/Input'
-import { Button } from './UI/Button'
 import { isValidIPFSUri } from '../utils/validation'
 import { useToast } from '../context/ToastContext'
 
