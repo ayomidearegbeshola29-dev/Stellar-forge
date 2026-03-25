@@ -757,6 +757,10 @@ cargo test
 git commit -m "chore(contracts): upgrade soroban-sdk to v21.1.0"
 ```
 
+## Code of Conduct
+
+Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
 ## Security
 
 ### Before Contributing
