@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { Input } from './UI'
 import { TransactionHistory } from './TransactionHistory'
+import { useClipboard } from '../hooks/useClipboard'
 import { useDebounce } from '../hooks/useDebounce'
 import { useTokens } from '../hooks/useTokens'
 import { STELLAR_CONFIG } from '../config/stellar'
@@ -8,20 +9,9 @@ import { useWallet } from '../hooks/useWallet'
 
 export const TokenDashboard: React.FC = () => {
   const { tokens, isLoading, error } = useTokens()
-
-  const [copiedAddress, setCopiedAddress] = useState<string | null>(null)
+  const { copied, copy } = useClipboard()
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
-
-  const handleCopyAddress = useCallback(async (address: string) => {
-    try {
-      await navigator.clipboard.writeText(address)
-      setCopiedAddress(address)
-      setTimeout(() => setCopiedAddress(null), 1800)
-    } catch {
-      // clipboard not available
-    }
-  }, [])
 
   const formatCreationDate = useCallback((createdAt: number | undefined) => {
     if (!createdAt) return 'Unknown'
@@ -78,11 +68,11 @@ export const TokenDashboard: React.FC = () => {
                       </div>
                     </div>
                     <button
-                      onClick={() => handleCopyAddress(token.creator)}
+                      onClick={() => copy(token.creator)}
                       className="text-xs text-blue-500 hover:underline shrink-0"
                       aria-label={`Copy address for ${token.name}`}
                     >
-                      {copiedAddress === token.creator ? 'Copied!' : 'Copy address'}
+                      {copied ? 'Copied!' : 'Copy address'}
                     </button>
                   </li>
                 ))
