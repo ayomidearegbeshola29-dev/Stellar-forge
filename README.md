@@ -150,9 +150,13 @@ npm run lint         # Lint code
 cd contracts/token-factory
 cargo build --target wasm32-unknown-unknown --release
 
+# Optimize the binary (reduces size and lowers deployment costs)
+stellar contract optimize \
+  --wasm ../../target/wasm32-unknown-unknown/release/token_factory.wasm
+
 # Deploy to testnet
 stellar contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/token_factory.wasm \
+  --wasm ../../target/wasm32-unknown-unknown/release/token_factory.optimized.wasm \
   --source <your-secret-key> \
   --network testnet
 
