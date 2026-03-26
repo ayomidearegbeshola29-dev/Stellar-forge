@@ -20,5 +20,18 @@ jobs:
           target: wasm32-unknown-unknown
           override: true
 
-      - name: Build wasm
-        run: cargo build --locked --target wasm32-unknown-unknown --release --manifest-path contracts/token-factory/Cargo.toml
+      - name: Install wasm-opt
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y binaryen
+
+      - name: Build and optimize wasm
+        working-directory: contracts/token-factory
+        run: bash build.sh
+
+      - name: Upload optimized wasm
+        uses: actions/upload-artifact@v4
+        with:
+          name: token-factory-optimized
+          path: target/wasm32-unknown-unknown/release/token_factory.optimized.wasm
+          retention-days: 30

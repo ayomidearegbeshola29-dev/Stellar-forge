@@ -88,6 +88,13 @@ cd contracts
 cargo build --target wasm32-unknown-unknown --release
 ```
 
+For an optimized binary (requires `binaryen` — install via `apt install binaryen` or `brew install binaryen`):
+```bash
+cd contracts/token-factory
+bash build.sh
+```
+This produces `target/wasm32-unknown-unknown/release/token_factory.optimized.wasm`, which is significantly smaller and lowers on-chain deployment costs.
+
 ### Run Contract Tests
 ```bash
 cd contracts/token-factory
