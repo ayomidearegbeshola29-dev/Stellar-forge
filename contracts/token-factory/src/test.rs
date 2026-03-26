@@ -331,6 +331,43 @@ fn test_mint_tokens() {
     assert_eq!(TokenClient::new(&s.env, &token_addr).balance(&recipient), 5_000);
 }
 
+#[test]
+fn test_mint_tokens_unauthorized() {
+    let s = Setup::new();
+    let creator = Address::generate(&s.env);
+    let unauthorized_user = Address::generate(&s.env);
+    s.fund(&unauthorized_user, 1_000);
+
+    let token_addr = s.new_token(&creator);
+
+    // Seed token info in storage to simulate a created token
+    let info = TokenInfo {
+        name: String::from_str(&s.env, "TestToken"),
+        symbol: String::from_str(&s.env, "TEST"),
+        decimals: 7,
+        creator: creator.clone(),
+        created_at: 0,
+        burn_enabled: true,
+    };
+    s.env.as_contract(&s.client.address, || {
+        let mut state: FactoryState = s.env.storage().instance()
+            .get(&symbol_short!("state")).unwrap();
+        state.token_count += 1;
+        let index = state.token_count;
+        s.env.storage().instance().set(&index, &info);
+        s.env.storage().instance().set(&symbol_short!("state"), &state);
+        s.env.storage().instance()
+            .set(&(&token_addr, symbol_short!("idx")), &index);
+    });
+
+    // Unauthorized user should not be able to mint tokens
+    let recipient = Address::generate(&s.env);
+    let result = s.client.try_mint_tokens(
+        &token_addr, &unauthorized_user, &recipient, &5_000, &1_000,
+    );
+    assert_eq!(result, Err(Ok(Error::Unauthorized)));
+}
+
 // ── burn ──────────────────────────────────────────────────────────────────────
 
 fn seed_token_with_burn(s: &Setup, creator: &Address, burn_enabled: bool) -> Address {
