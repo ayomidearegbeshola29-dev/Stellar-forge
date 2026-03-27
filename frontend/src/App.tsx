@@ -23,6 +23,8 @@ import { TokenDetail } from './components/TokenDetail'
 import { isFactoryConfigured } from './config/env'
 import ErrorBoundary from './components/ErrorBoundary'
 import { TosProvider } from './context/TosContext'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useState } from 'react'
 
 const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { wallet } = useWallet()

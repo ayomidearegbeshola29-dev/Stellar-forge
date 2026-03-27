@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { walletService } from '../services/wallet'
+import { useNetwork } from './NetworkContext'
 
 interface WalletState {
   address: string | null
@@ -20,6 +21,7 @@ interface WalletContextValue {
 const WalletContext = createContext<WalletContextValue | null>(null)
 
 export function WalletProvider({ children }: { children: ReactNode }) {
+  const { network } = useNetwork()
   const [wallet, setWallet] = useState<WalletState>({
     address: null,
     isConnected: false,
@@ -81,6 +83,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
     initWallet()
   }, [])
+
+  // Refresh balance when network changes
+  useEffect(() => {
+    if (wallet.isConnected && wallet.address) {
+      fetchBalance(wallet.address)
+    }
+  }, [network])
 
   return (
     <WalletContext.Provider

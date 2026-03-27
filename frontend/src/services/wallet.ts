@@ -3,7 +3,7 @@ import {
   getAddress,
   signTransaction as freighterSignTransaction,
 } from '@stellar/freighter-api'
-import { STELLAR_CONFIG } from '../config/stellar'
+import { STELLAR_CONFIG, NETWORK_CONFIGS } from '../config/stellar'
 
 interface HorizonBalance {
   asset_type: string
@@ -74,8 +74,7 @@ export class WalletService {
     }
 
     try {
-      const network = this.getActiveNetwork()
-      const networkPassphrase = STELLAR_CONFIG[network].networkPassphrase
+      const networkPassphrase = NETWORK_CONFIGS[network].networkPassphrase
 
       const signedResult = await freighterSignTransaction(xdr, {
         networkPassphrase,
@@ -92,7 +91,7 @@ export class WalletService {
         // Check for network mismatch
         if (error.message.includes('network')) {
           throw new Error(
-            `Network mismatch: Please switch Freighter to ${STELLAR_CONFIG.network}`
+            `Network mismatch: Please switch Freighter to ${network}`
           )
         }
         throw new Error(`Failed to sign transaction: ${error.message}`)
@@ -101,10 +100,9 @@ export class WalletService {
     }
   }
 
-  async getBalance(address: string): Promise<string> {
+  async getBalance(address: string, network: 'testnet' | 'mainnet'): Promise<string> {
     try {
-      const network = this.getActiveNetwork()
-      const horizonUrl = STELLAR_CONFIG[network].horizonUrl
+      const horizonUrl = NETWORK_CONFIGS[network].horizonUrl
 
       const response = await fetch(`${horizonUrl}/accounts/${address}`)
 
