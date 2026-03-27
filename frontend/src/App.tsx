@@ -1,5 +1,6 @@
 import React from 'react'
 import { ToastContainer, Button, Spinner } from './components/UI';
+import { OnboardingModal } from './components/UI/OnboardingModal';
 import './App.css'
 import { useTranslation } from 'react-i18next'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
@@ -9,6 +10,7 @@ import { NetworkProvider } from './context/NetworkContext'
 import { StellarProvider } from './context/StellarContext'
 import { NetworkSwitcher } from './components/NetworkSwitcher'
 import { LanguageSwitcher } from './components/LanguageSwitcher'
+import { FundbotButton } from './components/FundbotButton'
 import { useWallet } from './hooks/useWallet'
 import { truncateAddress, formatXLM } from './utils/formatting'
 import { NavBar } from './components/NavBar'
@@ -21,6 +23,8 @@ import { TokenDetail } from './components/TokenDetail'
 import { isFactoryConfigured } from './config/env'
 import ErrorBoundary from './components/ErrorBoundary'
 import { TosProvider } from './context/TosContext'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useState } from 'react'
 
 const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { wallet } = useWallet()
@@ -63,39 +67,34 @@ function AppContent() {
 
       <div className="min-h-screen bg-gray-100">
         <header className="bg-white shadow" role="banner">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-3">
-              {/* Top row: title + wallet controls */}
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h1 className="text-xl sm:text-3xl font-bold text-gray-900 leading-tight">{t('app.title')}</h1>
-                  <p className="mt-1 text-xs sm:text-sm text-gray-600">{t('app.subtitle')}</p>
-                </div>
+          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">{t('app.title')}</h1>
+                <p className="mt-2 text-sm text-gray-600">{t('app.subtitle')}</p>
+              </div>
 
-                <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end">
-                  <LanguageSwitcher />
-                  <NetworkSwitcher />
+              <div className="flex items-center gap-4">
+                <LanguageSwitcher />
+                <NetworkSwitcher />
 
-                  {!isInstalled && (
-                    <a
-                      href="https://www.freighter.app/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:text-blue-800 underline hidden sm:inline"
-                    >
-                      {t('wallet.installFreighter')}
-                    </a>
-                  )}
+                {!isInstalled && (
+                  <a
+                    href="https://www.freighter.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 hover:text-blue-800 underline"
+                  >
+                    {t('wallet.installFreighter')}
+                  </a>
+                )}
 
-                  {wallet.isConnected ? (
-                    <div className="flex items-center gap-2">
-                      <div className="text-right hidden sm:block">
-                        <div className="text-sm font-medium text-gray-900">
-                          {wallet.address && truncateAddress(wallet.address)}
-                        </div>
-                        {wallet.balance && (
-                          <div className="text-xs text-gray-600">{formatXLM(wallet.balance)}</div>
-                        )}
+                {wallet.isConnected ? (
+                  <div className="flex items-center gap-3">
+                    <FundbotButton />
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-gray-900">
+                        {wallet.address && truncateAddress(wallet.address)}
                       </div>
                       <Button onClick={handleDisconnect} variant="secondary" size="sm">
                         {t('wallet.disconnect')}
@@ -137,36 +136,9 @@ function AppContent() {
               )}
             </div>
 
-            <NavBar />
+            <NavBar onHelpClick={() => setShowOnboarding(true)} />
           </div>
         </header>
-
-        {showFriendbotBanner && (
-          <div className="bg-blue-50 border-b border-blue-200 p-3 sm:p-4">
-            <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-              <div className="text-blue-800 text-xs sm:text-sm">
-                Your testnet balance is low. Get free testnet XLM from{' '}
-                <a
-                  href={`https://friendbot.stellar.org/?addr=${wallet.address}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-bold underline"
-                >
-                  Friendbot
-                </a>.
-              </div>
-              <button
-                onClick={() => setShowBanner(false)}
-                className="text-blue-600 hover:text-blue-800 focus:outline-none flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label="Dismiss banner"
-              >
-                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
 
         {!isFactoryConfigured() && (
           <div className="bg-yellow-50 border-b border-yellow-300 p-4" role="alert">
